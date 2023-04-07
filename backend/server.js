@@ -11,12 +11,19 @@ const dbConnection = require("./config/database");
 const ApiError = require("./utils/apiError");
 const globalError = require("./middlewares/errorMiddleware");
 const mountRoutes = require("./routes");
+const { webhookCheckout } = require("./controllers/orderControllers");
 
 const app = express();
 
 app.use(cors());
 app.options("*", cors());
 app.use(compression());
+
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckout
+);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "uploads")));
